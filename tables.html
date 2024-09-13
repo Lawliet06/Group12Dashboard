@@ -14,7 +14,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./css/site.css" />
-    <title>tables</title>
+    <title>Product Records</title>
   </head>
   <body>
     <div class="header">
@@ -32,23 +32,21 @@
         <div class="left">
           <h3>Product Records</h3>
           <div class="form-container">
-            <div class="form-header">Details of avalialble products</div>
+            <div class="form-header">Details of Available Products</div>
             <div>
-              <table>
-                <tr>
-                  <th>Id</th>
-                  <th>Name</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Description</th>
-                </tr>
-                <tr>
-                  <td>Dummy</td>
-                  <td>Dummy</td>
-                  <td>Dummy</td>
-                  <td>Dummy</td>
-                  <td>Dummy</td>
-                </tr>
+              <table id="product-table">
+                <thead>
+                  <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Data will be inserted here -->
+                </tbody>
               </table>
             </div>
           </div>
@@ -56,8 +54,42 @@
         <div class="right"></div>
       </div>
     </div>
+    <!-- Load jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+      // Function to fetch and display product data
+      function fetchProductData() {
+        $.get('http://localhost:3000/products/all', (data) => {
+          // Clear existing table data
+          $('#product-table tbody').empty();
+
+          // Check if the data is an array
+          if (Array.isArray(data)) {
+            // Append new rows to the table
+            data.forEach(product => {
+              $('#product-table tbody').append(`
+                <tr>
+                  <td>${product.Id}</td>
+                  <td>${product.Name}</td>
+                  <td>$${product.Price}</td>
+                  <td>${product.Quantity}</td>
+                  <td>${product.Description}</td>
+                </tr>
+              `);
+            });
+          } else {
+            console.error('Data received is not an array');
+          }
+        }).fail(() => {
+          console.error('Error fetching product data');
+        });
+      }
+
+      // Initialize the page
+      $(document).ready(() => {
+        fetchProductData();
+      });
+
       $("#toggle-nav").click(() => {});
     </script>
   </body>
