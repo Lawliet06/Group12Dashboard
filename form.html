@@ -34,20 +34,22 @@
           <div class="form-container">
             <div class="form-header">Record A new Sale</div>
             <div>
-              <form action="">
+              <form id="productForm">
                 <label class="label" for="product">Product</label>
-                <input type="text" /><br />
+                <input type="text" id="product" /><br />
                 <label class="label" for="price">Price</label>
-                <input type="number" /><br />
+                <input type="number" id="price" /><br />
                 <label class="label" for="category">Category</label>
-                <select name="category" id="">
+                <select name="category" id="category">
                   <option value="Electronic">Electronic</option>
                   <option value="Decoration">Decoration</option>
                   <option value="Kitchen">Kitchen</option>
                 </select>
+                <br />
                 <label class="label" for="description">Description</label>
-                <textarea rows="6" name="description" id=""></textarea>
-                <button class="form-button" id="save">Save</button>
+                <textarea rows="6" name="description" id="description"></textarea>
+                <br />
+                <button class="form-button" id="save" type="submit">Save</button>
               </form>
             </div>
           </div>
@@ -55,9 +57,43 @@
         <div class="right"></div>
       </div>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      $("document").ready(() => {});
+      $("document").ready(() => {
+        $("#productForm").on("submit", function (event) {
+          event.preventDefault();
+
+          
+          let product = $("#product").val();
+          let price = $("#price").val();
+          let description = $("#description").val();
+          let message = "";
+
+        
+          if (product.length < 5 || product.length > 50) {
+            message += "Product name must be between 5 and 50 characters.\n";
+          }
+
+         
+          if (price <= 0 || isNaN(price)) {
+            message += "Price must be a number greater than 0.\n";
+          }
+
+          
+          if (description.length < 5 || description.length > 200) {
+            message += "Description must be between 5 and 200 characters.\n";
+          }
+
+          // Show alert messages or success message
+          if (message) {
+            alert(message); // Validation errors
+          } else {
+            alert("Data was sent successfully!"); // Success message
+           
+          }
+        });
+      });
     </script>
   </body>
 </html>
