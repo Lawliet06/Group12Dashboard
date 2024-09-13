@@ -1,63 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./css/site.css" />
-    <title>form</title>
-  </head>
-  <body>
-    <div class="header">
-      <div class="toggle">
-        <a id="toggle-nav"><i class="fa fa-navicon cog"></i></a>
-      </div>
-    </div>
-    <div class="container">
-      <div class="sidebar" id="sidebar">
-        <a href="dashboard.html"><i class="fa fa-home"></i> Dashboard</a>
-        <a href="form.html"><i class="fa fa-shopping-cart"></i> Forms</a>
-        <a href="tables.html"><i class="fa fa-shopping-bag"></i> Tables</a>
-      </div>
-      <div class="content">
-        <div class="left">
-          <h3>Add a new Product</h3>
-          <div class="form-container">
-            <div class="form-header">Record A new Sale</div>
-            <div>
-              <form action="">
-                <label class="label" for="product">Product</label>
-                <input type="text" /><br />
-                <label class="label" for="price">Price</label>
-                <input type="number" /><br />
-                <label class="label" for="category">Category</label>
-                <select name="category" id="">
-                  <option value="Electronic">Electronic</option>
-                  <option value="Decoration">Decoration</option>
-                  <option value="Kitchen">Kitchen</option>
-                </select>
-                <label class="label" for="description">Description</label>
-                <textarea rows="6" name="description" id=""></textarea>
-                <button class="form-button" id="save">Save</button>
-              </form>
-            </div>
-          </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/site.css" />
+  <title>Form Validation</title>
+  <style>
+    /* Modal Styling */
+    .modal {
+      display: none; 
+      position: fixed; 
+      left: 0; 
+      top: 0; 
+      width: 100%; 
+      height: 100%; 
+      background-color: rgba(0, 0, 0, 0.4); 
+    }
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 40%;
+      text-align: center;
+    }
+    .modal-header {
+      font-size: 24px;
+      color: blue;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .close {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <div class="left">
+        <h3>Add a new Product</h3>
+        <div class="form-container">
+          <form id="productForm">
+            <label for="product">Product</label>
+            <input type="text" id="product" /><br />
+            <label for="price">Price</label>
+            <input type="number" id="price" /><br />
+            <label for="category">Category</label>
+            <select id="category">
+              <option value="Electronic">Electronic</option>
+              <option value="Decoration">Decoration</option>
+              <option value="Kitchen">Kitchen</option>
+            </select>
+            <label for="description">Description</label>
+            <textarea rows="6" id="description"></textarea><br />
+            <button type="submit" id="save">Save</button>
+          </form>
         </div>
-        <div class="right"></div>
       </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-      $("document").ready(() => {});
-    </script>
-  </body>
+  </div>
+
+  <!-- Modal -->
+  <div id="responseModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Message</span>
+        <span class="close">&times;</span>
+      </div>
+      <p id="responseMessage"></p>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(() => {
+      // Form Validation
+      $('#productForm').on('submit', function (event) {
+        event.preventDefault();
+
+        const product = $('#product').val();
+        const price = parseFloat($('#price').val());
+        const description = $('#description').val();
+
+        if (product.length < 5 || product.length > 50) {
+          alert("Product name must be between 5 and 50 characters.");
+          return;
+        }
+
+        if (isNaN(price) || price <= 0) {
+          alert("Price must be a number greater than 0.");
+          return;
+        }
+
+        if (description.length < 5 || description.length > 200) {
+          alert("Description must be between 5 and 200 characters.");
+          return;
+        }
+
+        // Data to be sent to the server
+        const formData = {
+          product: product,
+          price: price,
+          category: $('#category').val(),
+          description: description
+        };
+
+        // AJAX request to submit the form data
+        $.ajax({
+          url: "http://localhost:3000/data",
+          method: "POST",
+          data: JSON.stringify(formData),
+          contentType: "application/json",
+          success: function (response) {
+            // Show modal on success
+            $('#responseMessage').text("Data was sent successfully");
+            $('#responseModal').css('display', 'block');
+          },
+          error: function () {
+            alert("An error occurred. Please try again.");
+          }
+        });
+      });
+
+      // Modal Close Button
+      $('.close').on('click', function () {
+        $('#responseModal').css('display', 'none');
+      });
+
+      // Hide modal when user clicks outside modal content
+      window.onclick = function (event) {
+        if (event.target === document.getElementById('responseModal')) {
+          $('#responseModal').css('display', 'none');
+        }
+      };
+    });
+  </script>
+</body>
 </html>
