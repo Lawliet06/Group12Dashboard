@@ -160,16 +160,55 @@ td {
   padding: 0.5rem;
 }
 
+/* Chart Styles */
+.charts-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin: 1rem;
+}
+
+.chart-container {
+  flex: 1;
+  min-width: 300px;
+  background-color: #fff;
+  padding: 0.5rem;
+  box-shadow: 0 0.125rem 0.313rem rgba(0, 0, 0, 0.1);
+}
+
+/* Chart header styling */
+.chart-header {
+  padding: 10px;
+  color: white;
+  margin-bottom: 1.25rem;
+  font-size: 1rem;
+}
+
+.manual-label {
+  color: #777;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Responsive design for different screen sizes */
 @media (max-width: 600px) {
   /* Styles for phones */
+  .chart-container {
+    flex: 1 1 100%;
+  }
 }
+
 @media (min-width: 601px) and (max-width: 1024px) {
   /* Styles for tablets */
-
+  .chart-container {
+    flex: 1 1 48%; /* Two charts per row with some margin */
+  }
 }
 
 @media (min-width: 1025px) {
   /* Styles for desktops */
-
+  .chart-container {
+    flex: 1 1 48%; /* Two charts per row with some margin */
+  }
 }
 
